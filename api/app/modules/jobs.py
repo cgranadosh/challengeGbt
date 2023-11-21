@@ -24,9 +24,14 @@ class Jobs:
 
         table_id = f"{Constants.DATASET}.{Constants.JOB_TABLE}"
         path_filename = f'exception/{Constants.JOB_TABLE}{Constants.OUTPUT_PATH.format(date=today_date)}{Constants.JOB_TABLE}_{today_file_date}.csv'
-
-        datos = pd.DataFrame([[self.id,self.job]], columns=list(Constants.fields_job.keys()))
-        print(datos)
-        datos.shape
-        ManageData.upload_data(datos, table_id, path_filename, Constants.BUCKET_GCS, Constants.PROJECT)
-        return 200
+        print("select_Jobs")
+        df_search = ManageData.get_data_from_bq(Constants.JOB_QUERY.format(id=self.id))
+        print(df_search)
+        if df_search.empty:
+            datos = pd.DataFrame([[self.id,self.job]], columns=list(Constants.fields_job.keys()))
+            print(datos)
+            datos.shape
+            ManageData.upload_data(datos, table_id, path_filename, Constants.BUCKET_GCS, Constants.PROJECT)
+            return Constants.succesfully_m
+        else:
+            return Constants.id_exist

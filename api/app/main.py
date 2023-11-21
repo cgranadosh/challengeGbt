@@ -3,12 +3,12 @@ from app.modules.hired_employees import H_employees
 from app.modules.departments import Departments
 from app.modules.jobs import Jobs
 from app.DataModel.datamodel import DepartmentsM, Hired_employeesM, JobsM
+import os
 
 app = FastAPI()
 
-import os
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\heavy\Documents\PythonScripts\Challenge Globant\praxis-road-356512-f4b3c65868bc.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./app/CREDENTIALS.json"
 
 @app.get("/")
 def read_root():
@@ -16,7 +16,7 @@ def read_root():
 
 
 @app.post("/challenge/departments/", status_code=200)
-def generate_score(departments: DepartmentsM):
+def upload_depts(departments: DepartmentsM):
     id_status_code = "INCORRECT DATA"  # 400
     status_code = ""
     try:
@@ -31,12 +31,12 @@ def generate_score(departments: DepartmentsM):
         status_code = id_status_code
         return status_code
 
-    score = Departments(**parameter_dict).upload_dept()
-    return score
+    data = Departments(**parameter_dict).upload_dept()
+    return data
 
 
 @app.post("/challenge/hired_employees/", status_code=200)
-def generate_score(h_employees: Hired_employeesM):
+def upload_hr_emp(h_employees: Hired_employeesM):
     id_status_code = "INCORRECT DATA"  # 400
     status_code = ""
     try:
@@ -54,12 +54,13 @@ def generate_score(h_employees: Hired_employeesM):
         status_code = id_status_code
         return status_code
 
-    score = H_employees(**parameter_dict).upload_hemp()
-    return score
+    data = H_employees(**parameter_dict).upload_hemp()
+    print(data)
+    return data
 
 
 @app.post("/challenge/jobs/", status_code=200)
-def generate_score(jobs: JobsM):
+def upload_jobs(jobs: JobsM):
     id_status_code = "INCORRECT DATA"  # 400
     status_code = ""
     try:
@@ -74,5 +75,5 @@ def generate_score(jobs: JobsM):
         status_code = id_status_code
         return status_code
 
-    score = Jobs(**parameter_dict).upload_jobs()
-    return score
+    data = Jobs(**parameter_dict).upload_jobs()
+    return data

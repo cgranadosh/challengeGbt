@@ -15,3 +15,9 @@ class Constants:
     fields_hemp = {"id":"","name":"","datetime":"","department_id":"","job_id":""}
     fields_dept = {"id":"","department":""}
     fields_job = {"id":"","job":""}
+    DEPT_QUERY = "Select * from challengeglobant.departments where id = {id}"
+    JOB_QUERY =  "Select * from challengeglobant.jobs where id = {id}"
+    HEMP_QUERY = "Select * from challengeglobant.hired_employees where id = {id}"
+    id_exist = {"405":"Code already exist"}
+    succesfully_m = {"200": "Code uploaded successfully"} 
+

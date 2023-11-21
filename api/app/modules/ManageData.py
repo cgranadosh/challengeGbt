@@ -1,4 +1,5 @@
 from google.cloud import storage, bigquery
+import pandas as pd
 
 
 class ManageData:
@@ -30,6 +31,23 @@ class ManageData:
             raise f"error loading information to bq. please check the process manually: {e}"
         return
     
+
+    def get_data_from_bq(query_string):
+        print("access to query bq")
+        bq_client = bigquery.Client()
+        # dataframe = pd.DataFrame()
+        #try:
+        dataframe = (
+                bq_client.query(query_string).result().to_dataframe(create_bqstorage_client=True,)
+             )
+        #except Exception as e:
+         #   print(f"Falla el acceso a la data {e}")
+
+
+        print(dataframe)
+
+        return dataframe
+
     @staticmethod
     def upload_storage(bucket_gcs,df, path_filename):
         try:

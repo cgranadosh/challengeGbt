@@ -25,9 +25,15 @@ class Departments:
 
             table_id = f"{Constants.DATASET}.{Constants.DEPT_TABLE}"
             path_filename = f'exception/{Constants.DEPT_TABLE}{Constants.OUTPUT_PATH.format(date=today_date)}{Constants.DEPT_TABLE}_{today_file_date}.csv'
-
-            datos = pd.DataFrame([[self.id,self.department]], columns=list(Constants.fields_dept.keys()))
-            print(datos)
-            datos.shape
-            ManageData.upload_data(datos, table_id, path_filename, Constants.BUCKET_GCS, Constants.PROJECT)
-            return 200
+            print("select_departments")
+            df_search = ManageData.get_data_from_bq(Constants.DEPT_QUERY.format(id=self.id))
+            print(df_search)
+            if df_search.empty:
+                 datos = pd.DataFrame([[self.id,self.department]], columns=list(Constants.fields_dept.keys()))
+                 print(datos)
+                 datos.shape
+                 ManageData.upload_data(datos, table_id, path_filename, Constants.BUCKET_GCS, Constants.PROJECT)
+                 return 200
+            else:
+                 return Constants.id_exist 
+            

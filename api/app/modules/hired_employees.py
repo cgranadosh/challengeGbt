@@ -25,15 +25,20 @@ class H_employees:
 
         table_id = f"{Constants.DATASET}.{Constants.HI_EMP_TABLE}"
         path_filename = f'exception/{Constants.HI_EMP_TABLE}{Constants.OUTPUT_PATH.format(date=today_date)}{Constants.HI_EMP_TABLE}_{today_file_date}.csv'
-
-        datos = pd.DataFrame([[self.id,
-                                        self.name,
-                                        self.datetime,
-                                        self.department_id,
-                                        self.job_id,
-                                        ]],
-                                      columns=list(Constants.fields_hemp.keys()))
-        print(datos)
-        datos.shape
-        ManageData.upload_data(datos, table_id, path_filename, Constants.BUCKET_GCS, Constants.PROJECT)
-        return 200
+        print("select_hired_emp")
+        df_search = ManageData.get_data_from_bq(Constants.HEMP_QUERY.format(id=self.id))
+        print(df_search)
+        if df_search.empty:
+            datos = pd.DataFrame([[self.id,
+                                            self.name,
+                                            self.datetime,
+                                            self.department_id,
+                                            self.job_id,
+                                            ]],
+                                        columns=list(Constants.fields_hemp.keys()))
+            print(datos)
+            datos.shape
+            ManageData.upload_data(datos, table_id, path_filename, Constants.BUCKET_GCS, Constants.PROJECT)
+            return Constants.succesfully_m
+        else:
+            return Constants.id_exist
